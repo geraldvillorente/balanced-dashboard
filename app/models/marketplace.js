@@ -1,7 +1,7 @@
 require('app/models/user_marketplace');
 
 Balanced.Marketplace = Balanced.UserMarketplace.extend({
-	uri: '/v1/marketplaces',
+	uri: '/marketplaces',
 
 	credits: Balanced.Model.hasMany('credits', 'Balanced.Credit'),
 	debits: Balanced.Model.hasMany('debits', 'Balanced.Debit'),
@@ -19,10 +19,6 @@ Balanced.Marketplace = Balanced.UserMarketplace.extend({
 
 	customers: Balanced.Model.hasMany('customers', 'Balanced.Customer'),
 
-	callbacks_uri: function() {
-		return this.get('uri') + '/callbacks';
-	}.property('uri'),
-
 	funding_instruments_uri: function() {
 		return this.get('uri') + '/search?limit=10&offset=0&q=&type[in]=bank_account,card';
 	}.property('uri'),
@@ -33,3 +29,7 @@ Balanced.Marketplace = Balanced.UserMarketplace.extend({
 });
 
 Balanced.TypeMappings.addTypeMapping('marketplace', 'Balanced.Marketplace');
+
+Balanced.Marketplace.reopenClass({
+	serializer: Balanced.Rev1Serializer.create()
+});
