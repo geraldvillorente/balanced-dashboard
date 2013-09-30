@@ -257,16 +257,17 @@ Balanced.Model.reopenClass({
 					typeClass = metadataTypeClass;
 					return typeClass.find(uriPropertyValue);
 				} else {
-				// if we can't figure out what type it is from the
-				// metadata, fetch it and set the result as an embedded
-				// property in our JSON. That'll force an update of the
-				// association
-				var self = this;
-				Balanced.Adapter.get(defaultType, uriPropertyValue, function (json) {
-					self.set(embeddedProperty, json);
-				});
+					// if we can't figure out what type it is from the
+					// metadata, fetch it and set the result as an embedded
+					// property in our JSON. That'll force an update of the
+					// association
+					var self = this;
+					Balanced.Adapter.get(defaultType, uriPropertyValue, function(json) {
+						var modelJson = typeClass.serializer.extractSingle(json, typeClass, uriPropertyValue);
+						self.set(embeddedProperty, modelJson);
+					});
 
-				return embeddedPropertyValue;
+					return embeddedPropertyValue;
 				}
 			} else {
 				return embeddedPropertyValue;
